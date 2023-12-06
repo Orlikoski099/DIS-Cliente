@@ -1,0 +1,11 @@
+<header>
+  <h1>{{ titulo }}</h1>
+</header>
+<div class="container">
+  <div class="input-group mb-3">
+    <input type="number" placeholder="Número de requisições" aria-label="Número de requisições" aria-describedby="basic-addon2"  [(ngModel)]="requisicoes">
+  </div>
+  <div>
+    <button type="button" class="btn btn-info" (click)="randomizeValues()">Randomizar Requisição</button>
+  </div>
+</div>
