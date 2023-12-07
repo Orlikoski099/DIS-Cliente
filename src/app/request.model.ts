@@ -1,6 +1,6 @@
-export interface DefaultRequest {
-    ganho: boolean;
-    vector: string;
-    user: number;
-    model: boolean;
+export class DefaultRequest {
+    ganho!: boolean;
+    vector!: string[];
+    user!: number;
+    model!: boolean;
 }

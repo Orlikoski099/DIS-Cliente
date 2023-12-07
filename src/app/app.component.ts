@@ -1,62 +1,84 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Blob } from 'buffer';
 import * as CSV from 'csv-parser';
 import { DefaultRequest } from './request.model';
+import { delay } from 'rxjs';
+import { AnyARecord } from 'dns';
 
 
 enum File {
-  'MODEL1',
-  'MODEL2',
-  'MODEL3',
+  'MODEL1.csv',
+  'MODEL2.csv',
+  'MODEL3.csv',
 }
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
-
 export class AppComponent {
-  titulo = 'Desenvolvimento Integrado de Sistemas';
-  
   public requisicoes = 0;
-  usuario!: number;
-  ganho!: boolean;
+  titulo = 'Desenvolvimento Integrado de Sistemas';
 
-  req!: DefaultRequest;
+  allRequests: DefaultRequest[] = [];
+  allReturns: any[] = [];
 
-  PATH_MODEL1 = './assets/model1'
-  PATH_MODEL2 = './assets/model2'
+  PATH_MODEL1 = './assets/model1/'
+  PATH_MODEL2 = './assets/model2/'
 
+  constructor(private http: HttpClient) {}
 
-  todoRequests = [];
-
-  constructor(private http:HttpClient) {}
-
-  public randomizeValues(){
-    this.req.user = Math.floor(Math.random() * 30000)
-    this.req.ganho = Math.random() > 0.5 ? true : false;
-    this.req.model = Math.random() > 0.5 ? true : false;
+  public randomizeValues(req: DefaultRequest){
+    req.user = Math.floor(Math.random() * 30000)
+    req.ganho = Math.random() > 0.5 ? true : false;
+    req.model = Math.random() > 0.5 ? true : false;
   }
 
-  public loadVector() {
-    let vectorLoaded!: string;
+  public async loadVector(req: DefaultRequest) {
+    const vectorToRead = this.getRandomFilePath(req);
+    const vectorLoaded = await this.readCSVFile(vectorToRead);
 
-    let vector =  Math.floor(Math.random() * 2.999999999)
-    let vectorToRead = File[vector]
-
-
-
-
-    this.req.vector = vectorLoaded;
+    req.vector = vectorLoaded;
   }
 
-  public sendRequests(){
-    for(let i = 0; i < this.requisicoes; i++) {
-      this.randomizeValues()
+  private getRandomFilePath(req: DefaultRequest): string {
+    const vector = Math.floor(Math.random() * 2.999999999);
+    const fileName = File[vector];
+    return (req.model ? this.PATH_MODEL1 : this.PATH_MODEL2) + fileName;
+  }
+
+  private async readCSVFile(filePath: string): Promise<string[]> {
+    try {
+      const fileContent: string | undefined = await this.http.get(filePath, { responseType: 'text' }).toPromise();
       
+      if (fileContent === undefined) {
+        console.error('Conteúdo do arquivo é indefinido.');
+        return [];
+      }
+      const lines = fileContent.split('\n').map(line => line.trim());
+      return lines;
+    } catch (error) {
+      console.error('Erro ao carregar o arquivo CSV:', error);
+      return [];
     }
   }
-  
+
+  public async sendRequests() {
+    this.allRequests = [];
+    for (let i = 0; i < this.requisicoes; i++) {
+      let req = new DefaultRequest;
+      this.randomizeValues(req);
+      await this.loadVector(req);
+      this.allRequests.push(req);
+    }
+
+  }
+
+  public requestService() {
+    this.allRequests.forEach(i => {
+      delay(Math.floor(Math.random() * 1000))
+      this.http.post<any>('localhost:8080', i).subscribe((data) => this.allReturns.push(data))
+    });
+  }
 }
