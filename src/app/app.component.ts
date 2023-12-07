@@ -12,13 +12,14 @@ enum File {
   'MODEL3.csv',
 }
 
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  public requisicoes = 0;
+  public requisicoes!: number;
   titulo = 'Desenvolvimento Integrado de Sistemas';
 
   allRequests: DefaultRequest[] = [];
@@ -26,6 +27,12 @@ export class AppComponent {
 
   PATH_MODEL1 = './assets/model1/'
   PATH_MODEL2 = './assets/model2/'
+
+  isOpen: boolean[] = [];
+
+  toggleAccordion(index: number) {
+    this.isOpen[index] = !this.isOpen[index];
+  }
 
   constructor(private http: HttpClient) {}
 
@@ -72,13 +79,20 @@ export class AppComponent {
       await this.loadVector(req);
       this.allRequests.push(req);
     }
-
+    console.log(this.allRequests);
+    this.requestService();
   }
 
-  public requestService() {
-    this.allRequests.forEach(i => {
-      delay(Math.floor(Math.random() * 1000))
-      this.http.post<any>('localhost:8080', i).subscribe((data) => this.allReturns.push(data))
-    });
+  public async requestService() {
+    for(let i of this.allRequests) {
+      await sleep(Math.floor(Math.random() * 5000))
+      console.log(`Enviada requisição do usuário: ${i.user}`)
+      // this.http.post<any>('localhost:8080', i).subscribe((data) => this.allReturns.push(data))
+    }
+  }
+
+  atualizarAccordion(i: number){
+    let element = document.getElementById(`accordion_${i}`)
+    element?.classList.contains("show") ? element?.classList.remove("show") : element?.classList.add("show")
   }
 }

@@ -1,11 +1,59 @@
-<header>
+<header class="custom-header">
   <h1>{{ titulo }}</h1>
 </header>
-<div class="container">
-  <div class="input-group mb-3">
-    <input type="number" placeholder="Número de requisições" aria-label="Número de requisições" aria-describedby="basic-addon2"  [(ngModel)]="requisicoes">
+
+<div class="container text-center card">
+  <div class="row card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Número de requisições</span>
+          <input type="number" class="form-control" placeholder="Insira o número" aria-label="Número de requisições"
+            aria-describedby="basic-addon1" [(ngModel)]="requisicoes">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="d-grid gap-2">
+          <button type="button" class="btn btn-info" (click)="sendRequests()">Enviar</button>
+        </div>
+      </div>
+    </div>
+    <div class="accordion row" style="padding: 10px;" *ngIf="allRequests.length > 0" id="accordionRequests">
+      <div *ngFor="let return of allRequests; let i = index" class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="btn btn-secondary w-100" style="margin: 5px;" type="button" (click)="atualizarAccordion(i)">
+            Requisição do usuário: {{ return.user }}
+          </button>
+        </h2>
+        <div class="accordion-collapse collapse" [id]="'accordion_' + i">
+          <div class="accordion-body">
+            <fieldset disabled>
+              <div class="row">
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="disabledTextInput" class="form-label">Ganho</label>
+                    <input type="text" id="disabledTextInput" class="form-control" [value]="return.ganho">
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="disabledTextInput" class="form-label">Modelo</label>
+                    <input type="text" id="disabledTextInput" class="form-control" [value]="return.model">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="input-group">
+                    <span class="input-group-text">Vetor Enviado</span>
+                    <textarea class="form-control" style="height: 160px;" aria-label="With textarea"
+                      [value]="return.vector"></textarea>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div>
-    <button type="button" class="btn btn-info" (click)="sendRequests()">Randomizar Requisição</button>
-  </div>
-</div>
