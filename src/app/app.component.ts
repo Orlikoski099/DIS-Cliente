@@ -87,12 +87,15 @@ export class AppComponent {
     for(let i of this.allRequests) {
       await sleep(Math.floor(Math.random() * 5000))
       console.log(`Enviada requisição do usuário: ${i.user}`)
-      // this.http.post<any>('localhost:8080', i).subscribe((data) => this.allReturns.push(data))
+      this.http.post<any>('localhost:8080', i).subscribe((data) => this.allReturns.push(data))
     }
   }
 
   atualizarAccordion(i: number){
     let element = document.getElementById(`accordion_${i}`)
     element?.classList.contains("show") ? element?.classList.remove("show") : element?.classList.add("show")
+  }
+  teste(){
+    this.http.get('localhost:8080').subscribe((data)=>console.log(data))
   }
 }
