@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import * as CSV from 'csv-parser';
-import { DefaultRequest } from './request.model';
-import { delay } from 'rxjs';
-import { AnyARecord } from 'dns';
+import { Component } from '@angular/core';
+import { AppServiceModule } from './app.service';
+import { RequestsModel } from './request.model';
+import { ReturnModel } from './return.model';
 
 
 enum File {
@@ -11,6 +10,7 @@ enum File {
   'MODEL2.csv',
   'MODEL3.csv',
 }
+
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 @Component({
@@ -22,8 +22,8 @@ export class AppComponent {
   public requisicoes!: number;
   titulo = 'Desenvolvimento Integrado de Sistemas';
 
-  allRequests: DefaultRequest[] = [];
-  allReturns: any[] = [];
+  allRequests: RequestsModel[] = [];
+  allReturns: ReturnModel[] = [];
 
   PATH_MODEL1 = './assets/model1/'
   PATH_MODEL2 = './assets/model2/'
@@ -34,22 +34,22 @@ export class AppComponent {
     this.isOpen[index] = !this.isOpen[index];
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private service: AppServiceModule) {}
 
-  public randomizeValues(req: DefaultRequest){
+  public randomizeValues(req: RequestsModel){
     req.user = Math.floor(Math.random() * 30000)
     req.ganho = Math.random() > 0.5 ? true : false;
     req.model = Math.random() > 0.5 ? true : false;
   }
 
-  public async loadVector(req: DefaultRequest) {
+  public async loadVector(req: RequestsModel) {
     const vectorToRead = this.getRandomFilePath(req);
     const vectorLoaded = await this.readCSVFile(vectorToRead);
 
     req.vector = vectorLoaded;
   }
 
-  private getRandomFilePath(req: DefaultRequest): string {
+  private getRandomFilePath(req: RequestsModel): string {
     const vector = Math.floor(Math.random() * 2.999999999);
     const fileName = File[vector];
     return (req.model ? this.PATH_MODEL1 : this.PATH_MODEL2) + fileName;
@@ -74,25 +74,24 @@ export class AppComponent {
   public async sendRequests() {
     this.allRequests = [];
     for (let i = 0; i < this.requisicoes; i++) {
-      let req = new DefaultRequest;
+      let req = new RequestsModel;
       this.randomizeValues(req);
       await this.loadVector(req);
+      this.requestService(req); 
       this.allRequests.push(req);
     }
-    console.log(this.allRequests);
-    this.requestService();
   }
 
-  public async requestService() {
-    for(let i of this.allRequests) {
-      await sleep(Math.floor(Math.random() * 5000))
-      console.log(`Enviada requisição do usuário: ${i.user}`)
-      // this.http.post<any>('localhost:8080', i).subscribe((data) => this.allReturns.push(data))
-    }
+  public async requestService(i: RequestsModel) {
+    await sleep(Math.floor(Math.random() * 5000))
+    this.service.request(i).subscribe((res) => this.allReturns.push(res));  
   }
 
   atualizarAccordion(i: number){
     let element = document.getElementById(`accordion_${i}`)
     element?.classList.contains("show") ? element?.classList.remove("show") : element?.classList.add("show")
+  }
+  teste(){
+    this.service.teste().subscribe((data) => console.log(data))
   }
 }

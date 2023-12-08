@@ -18,8 +18,8 @@
         </div>
       </div>
     </div>
-    <div class="accordion row" style="padding: 10px;" *ngIf="allRequests.length > 0" id="accordionRequests">
-      <div *ngFor="let return of allRequests; let i = index" class="accordion-item">
+    <div class="accordion row" style="padding: 10px;" *ngIf="allReturns.length > 0" id="accordionRequests">
+      <div *ngFor="let return of allReturns; let i = index" class="accordion-item">
         <h2 class="accordion-header">
           <button class="btn btn-secondary w-100" style="margin: 5px;" type="button" (click)="atualizarAccordion(i)">
             Requisição do usuário: {{ return.user }}
@@ -31,23 +31,23 @@
               <div class="row">
                 <div class="col">
                   <div class="mb-3">
-                    <label for="disabledTextInput" class="form-label">Ganho</label>
-                    <input type="text" id="disabledTextInput" class="form-control" [value]="return.ganho">
+                    <label for="disabledTextInput" class="form-label">Tempo decorrido</label>
+                    <input type="text" id="disabledTextInput" class="form-control" [value]="return.tempo">
                   </div>
                 </div>
                 <div class="col">
                   <div class="mb-3">
-                    <label for="disabledTextInput" class="form-label">Modelo</label>
-                    <input type="text" id="disabledTextInput" class="form-control" [value]="return.model">
+                    <label for="disabledTextInput" class="form-label">Iterações</label>
+                    <input type="text" id="disabledTextInput" class="form-control" [value]="return.iteracoes">
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col">
                   <div class="input-group">
-                    <span class="input-group-text">Vetor Enviado</span>
+                    <span class="input-group-text">BitMap Recebido</span>
                     <textarea class="form-control" style="height: 160px;" aria-label="With textarea"
-                      [value]="return.vector"></textarea>
+                      [value]="return.bitMapVector"></textarea>
                   </div>
                 </div>
               </div>
@@ -57,3 +57,5 @@
       </div>
     </div>
   </div>
+  <button type="button" class="btn btn-info" (click)="teste()">TESTE</button>
+</div>

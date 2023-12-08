@@ -79,7 +79,7 @@
             "development": {
               "buildTarget": "cliente:build:development"
             }
-          },
+          },           
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
