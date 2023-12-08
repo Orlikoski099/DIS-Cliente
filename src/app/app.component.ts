@@ -77,19 +77,9 @@ export class AppComponent {
       let req = new RequestsModel;
       this.randomizeValues(req);
       await this.loadVector(req);
-      this.allRequests.push(req);
-    }
-    console.log(this.allRequests);
-    this.requestService();
-  }
-
-  public async requestService() {
-    for(let i of this.allRequests) {
-      await sleep(Math.floor(Math.random() * 5000))
-      this.service.request(i).subscribe((res) => this.allReturns.push(res));  
+      this.service.request(req).subscribe((res) => this.allReturns.push(res));  
     }
   }
-
   atualizarAccordion(i: number){
     let element = document.getElementById(`accordion_${i}`)
     element?.classList.contains("show") ? element?.classList.remove("show") : element?.classList.add("show")
