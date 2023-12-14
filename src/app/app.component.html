@@ -47,7 +47,15 @@
                   <div class="input-group">
                     <span class="input-group-text">BitMap Recebido</span>
                     <textarea class="form-control" style="height: 160px;" aria-label="With textarea"
-                      [value]="return.bitMapVector"></textarea>
+                      [value]="return.imageVector"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="image" class="form-label">Imagem Recebida</label>
+                    <img [src]="return.image" alt="Imagem Recebida" class="img-fluid">
                   </div>
                 </div>
               </div>
@@ -57,5 +65,4 @@
       </div>
     </div>
   </div>
-  <button type="button" class="btn btn-info" (click)="teste()">TESTE</button>
 </div>

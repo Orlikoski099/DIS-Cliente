@@ -4,6 +4,7 @@ import { AppServiceModule } from './app.service';
 import { RequestsModel } from './request.model';
 import { ReturnModel } from './return.model';
 
+import * as html2canvas from 'html2canvas';
 
 enum File {
   'MODEL1.csv',
@@ -50,7 +51,8 @@ export class AppComponent {
   }
 
   private getRandomFilePath(req: RequestsModel): string {
-    const vector = Math.floor(Math.random() * 2.999999999);
+    // const vector = Math.floor(Math.random() * 2.999999999);
+    const vector = Math.floor(Math.random());
     const fileName = File[vector];
     return (req.model ? this.PATH_MODEL1 : this.PATH_MODEL2) + fileName;
   }
@@ -72,6 +74,7 @@ export class AppComponent {
   }
 
   public async sendRequests() {
+    this.allReturns = [];
     this.allRequests = [];
     for (let i = 0; i < this.requisicoes; i++) {
       let req = new RequestsModel;
@@ -84,14 +87,41 @@ export class AppComponent {
 
   public async requestService(i: RequestsModel) {
     await sleep(Math.floor(Math.random() * 5000))
-    this.service.request(i).subscribe((res) => this.allReturns.push(res));  
+    this.service.request(i).subscribe((res) => { 
+      if(res) {
+        res.image = this.generateImage(res.imageVector)
+        this.allReturns.push(res);
+      } 
+    });  
   }
 
   atualizarAccordion(i: number){
     let element = document.getElementById(`accordion_${i}`)
     element?.classList.contains("show") ? element?.classList.remove("show") : element?.classList.add("show")
   }
-  teste(){
-    this.service.teste().subscribe((data) => console.log(data))
-  }
+
+  private generateImage(vetor: number[]): string {
+    const pixelSize = 10; // Define o tamanho do pixel (multiplier)
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+  
+    const size = Math.sqrt(vetor.length);
+    const scaledSize = size * pixelSize; // Tamanho escalado
+  
+    canvas.width = scaledSize;
+    canvas.height = scaledSize;
+  
+    for (let i = 0; i < vetor.length; i++) {
+      const x = (i % size) * pixelSize;
+      const y = Math.floor(i / size) * pixelSize;
+      const grayscaleValue = vetor[i];
+      if (ctx) {
+        ctx.fillStyle = `rgb(${grayscaleValue}, ${grayscaleValue}, ${grayscaleValue})`;
+        ctx.fillRect(x, y, pixelSize, pixelSize); // Aumenta o tamanho do pixel
+      }
+    }
+  
+    // Converte o canvas para imagem base64 e retorna
+    return canvas.toDataURL('image/png');
+  }  
 }
