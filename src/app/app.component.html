@@ -31,8 +31,14 @@
               <div class="row">
                 <div class="col">
                   <div class="mb-3">
-                    <label for="disabledTextInput" class="form-label">Tempo decorrido</label>
-                    <input type="text" id="disabledTextInput" class="form-control" [value]="return.tempo">
+                    <label for="disabledTextInput" class="form-label">Início</label>
+                    <input type="text" id="disabledTextInput" class="form-control" [value]="return.startTime">
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="disabledTextInput" class="form-label">Fim</label>
+                    <input type="text" id="disabledTextInput" class="form-control" [value]="return.endTime">
                   </div>
                 </div>
                 <div class="col">
@@ -45,17 +51,17 @@
               <div class="row">
                 <div class="col">
                   <div class="input-group">
-                    <span class="input-group-text">BitMap Recebido</span>
+                    <span class="input-group-text">Vetor GrayScale Recebido</span>
                     <textarea class="form-control" style="height: 160px;" aria-label="With textarea"
                       [value]="return.imageVector"></textarea>
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div style="margin-top: 10px;" class="row">
                 <div class="col">
-                  <div class="mb-3">
-                    <label for="image" class="form-label">Imagem Recebida</label>
-                    <img [src]="return.image" alt="Imagem Recebida" class="img-fluid">
+                  <div class="input-group mb-3">
+                    <label class="input-group-text" id="basic-addon1">Imagem Recebida</label>
+                    <img [src]="return.image" id="basic-addon1" alt="Imagem Recebida" class="form-control">
                   </div>
                 </div>
               </div>

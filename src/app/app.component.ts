@@ -39,7 +39,8 @@ export class AppComponent {
 
   public randomizeValues(req: RequestsModel){
     req.user = Math.floor(Math.random() * 30000)
-    req.ganho = Math.random() > 0.5 ? true : false;
+    // req.ganho = Math.random() > 0.5 ? true : false; //Desabilitado opção de enviar com ganho pois está dando errado :(
+    req.ganho = false; //Caso vá reabilitar o ganho, remova/comente essa linha e libere a de cima
     req.model = Math.random() > 0.5 ? true : false;
   }
 
@@ -51,8 +52,7 @@ export class AppComponent {
   }
 
   private getRandomFilePath(req: RequestsModel): string {
-    // const vector = Math.floor(Math.random() * 2.999999999);
-    const vector = Math.floor(Math.random());
+    const vector = Math.floor(Math.random() * 2.999999999);
     const fileName = File[vector];
     return (req.model ? this.PATH_MODEL1 : this.PATH_MODEL2) + fileName;
   }
